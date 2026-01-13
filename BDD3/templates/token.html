@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Connexion Réussie !</h2>
+    <p>Voici votre jeton d'accès (Token JWT) :</p>
+    
+    <textarea rows="5" cols="60">{{ token }}</textarea>
+    
+    <br><br>
+    
+    <p>Cliquez ici pour accéder à la liste protégée :</p>
+    <a href="/list?token={{ token }}">VOIR LA LISTE DES ÉTUDIANTS</a>
+    
+    <br><br>
+    <a href="/new">Ajouter un étudiant</a>
+</body>
+</html>

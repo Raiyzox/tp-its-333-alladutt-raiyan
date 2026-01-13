@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h3>Modifier l'étudiant</h3>
+    
+    <form action="/edit/{{ row['rowid'] }}" method="POST">
+        Nom<br> 
+        <input type="text" name="nom" value="{{ row['nom'] }}" /><br>
+        
+        Adresse<br> 
+        <textarea name="addr">{{ row['addr'] }}</textarea><br>
+        
+        PINCODE<br> 
+        <input type="text" name="pin" value="{{ row['pin'] }}" /><br>
+        
+        <br>
+        <input type="submit" value="Sauvegarder les modifications" />
+    </form>
+    
+    <br>
+    <a href="/list">Annuler et retour à la liste</a>
+</body>
+</html>

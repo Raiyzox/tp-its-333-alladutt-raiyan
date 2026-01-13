@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>table, th, td { border: 1px solid black; padding: 5px; }</style>
+</head>
+<body>
+    <h3>Liste Sécurisée des Étudiants (Admin)</h3>
+    
+    <table>
+        <thead>
+            <tr><th>Nom</th><th>Adresse</th><th>PIN</th></tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row["nom"] }}</td>
+                <td>{{ row["addr"] }}</td>
+                <td>{{ row["pin"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <br>
+    <a href="/login">Déconnexion</a>
+</body>
+</html>
