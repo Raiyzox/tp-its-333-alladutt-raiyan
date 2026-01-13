@@ -1,0 +1,29 @@
+[
+    {
+        "id": 101,
+        "nom": "PAUL",
+        "sexe": "H",
+        "parametres_sante": {
+            "groupe_sanguin": "A+",
+            "maladie": "Hypertension"
+        }
+    },
+    {
+        "id": 102,
+        "nom": "PIERRE",
+        "sexe": "F",
+        "parametres_sante": {
+            "groupe_sanguin": "O-",
+            "maladie": "Aucune"
+        }
+    },
+    {
+        "id": 103,
+        "nom": "JACQUES",
+        "sexe": "H",
+        "parametres_sante": {
+            "groupe_sanguin": "B+",
+            "maladie": "Diabète type 2"
+        }
+    }
+]

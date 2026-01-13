@@ -1,0 +1,50 @@
+import json
+import os
+
+# Nom du fichier JSON
+FICHIER_BDD = 'patient.json'
+
+def recuperer_patient_par_id(id_recherche):
+    """
+    Cherche un patient par son ID dans le fichier JSON.
+    Retourne les données au format JSON (string) ou None si pas trouvé.
+    """
+    
+    # Vérifier si le fichier existe
+    if not os.path.exists(FICHIER_BDD):
+        return json.dumps({"erreur": "Fichier de base de données introuvable"})
+
+    try:
+        # Ouverture et lecture du fichier
+        with open(FICHIER_BDD, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+        # Parcours des patients pour trouver l'ID
+        for patient in data:
+            if patient['id'] == id_recherche:
+                # On a trouvé le patient, on le convertit en JSON propre
+                return json.dumps(patient, indent=4, ensure_ascii=False)
+        
+        # Si la boucle se termine sans trouver l'ID
+        return json.dumps({"erreur": "Patient non trouvé"}, indent=4)
+
+    except json.JSONDecodeError:
+        return json.dumps({"erreur": "Le fichier JSON est mal formé"})
+
+# --- Zone de test (Exécutée seulement si on lance ce fichier directement) ---
+if __name__ == "__main__":
+    print("--- Recherche de patient ---")
+    try:
+        # Demande à l'utilisateur d'entrer un ID
+        saisie = input("Entrez l'ID du patient : ")
+        id_a_chercher = int(saisie)
+        
+        # Appel de la fonction
+        resultat = recuperer_patient_par_id(id_a_chercher)
+        
+        # Affichage du résultat
+        print("\nRésultat de la recherche :")
+        print(resultat)
+        
+    except ValueError:
+        print("Erreur : Veuillez entrer un numéro valide pour l'ID.")
