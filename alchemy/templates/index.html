@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ajouter Étudiant</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; text-align: center; }
+        form { display: inline-block; text-align: left; border: 1px solid #ccc; padding: 20px; border-radius: 10px; }
+        input[type=submit] { background-color: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <h3>Nouveau Étudiant (Groupe ITS2)</h3>
+    
+    <form action="/new" method="post">
+      Nom : <br>
+      <input type="text" name="name" required /><br /><br />
+      
+      Adresse : <br>
+      <textarea name="addr"></textarea><br /><br />
+      
+      Pincode : <br>
+      <input type="text" name="pincode" /><br /><br />
+      
+      <input type="submit" value="Enregistrer" />
+    </form>
+    
+    <br><br>
+    <a href="/" style="color: grey;">Retour à la liste</a>
+  </body>
+</html>

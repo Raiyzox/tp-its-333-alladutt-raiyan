@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Liste des étudiants</title>
+    <style>
+      table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+      th, td { border: 1px solid black; padding: 10px; text-align: center; }
+      th { background-color: #f2f2f2; }
+      body { font-family: sans-serif; text-align: center; }
+      a { text-decoration: none; padding: 10px 20px; background: #28a745; color: white; border-radius: 5px; }
+    </style>
+  </head>
+  <body>
+    <h2>Liste des étudiants (SQLAlchemy)</h2>
+
+    <table>
+      <tr>
+        <th>Nom</th>
+        <th>Groupe</th> <th>Adresse</th>
+        <th>PIN</th>
+      </tr>
+
+      {% for e in etudiants %}
+      <tr>
+        <td>{{ e.nom }}</td>
+        <td>{{ e.groupe.nom }}</td> 
+        <td>{{ e.adresse }}</td>
+        <td>{{ e.pin }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <br /><br />
+    <a href="/new">➕ Ajouter un étudiant</a>
+  </body>
+</html>
