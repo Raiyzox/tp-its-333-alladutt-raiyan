@@ -71,7 +71,7 @@
 
     <script>
         let token = "";
-        let currentId = null; // ID de la personne qu'on est en train de regarder
+        let currentId = null; 
 
         async function login() {
             const u = document.getElementById('user').value;
@@ -85,7 +85,7 @@
                 if(r.ok) { 
                     token = d.token; 
                     msg('msgAuth', 'Connecté !', true); 
-                    chargerListe(); // On charge la liste dès qu'on est connecté
+                    chargerListe(); 
                 } else msg('msgAuth', d.message, false);
             } catch(e) { msg('msgAuth', "Erreur connexion", false); }
         }
@@ -95,11 +95,11 @@
             tbody.innerHTML = "<tr><td colspan='4'>Chargement...</td></tr>";
             
             try {
-                // On appelle la nouvelle route GET /persons
+                
                 const r = await fetch('http://127.0.0.1:5001/persons');
                 const data = await r.json();
                 
-                tbody.innerHTML = ""; // On vide
+                tbody.innerHTML = ""; 
                 data.forEach(p => {
                     const row = `
                         <tr>
@@ -127,12 +127,12 @@
                 });
                 if(r.ok) { 
                     document.getElementById('newName').value = "";
-                    chargerListe(); // On rafraichit la liste
+                    chargerListe();
                 } else alert("Erreur: Connectez-vous d'abord !");
             } catch(e) { alert("Erreur Service 1"); }
         }
 
-        // --- GESTION DE LA CASCADE (Service 1 supprime tout) ---
+
         async function supprimerTout(id) {
             if(!confirm("⚠️ Attention !\nCela va supprimer la personne ET son dossier médical.\nContinuer ?")) return;
             
@@ -141,13 +141,13 @@
                     method: 'DELETE', headers: {'x-access-token': token}
                 });
                 const d = await r.json();
-                alert(d.message); // Affiche "Personne supprimée + Dossier médical supprimé"
+                alert(d.message); 
                 chargerListe();
                 document.getElementById('boxSante').style.display = 'none';
             } catch(e) { alert("Erreur suppression"); }
         }
 
-        // --- GESTION SANTÉ ISOLÉE (Service 2) ---
+ 
         async function voirSante(id, nom) {
             currentId = id;
             document.getElementById('boxSante').style.display = 'block';
