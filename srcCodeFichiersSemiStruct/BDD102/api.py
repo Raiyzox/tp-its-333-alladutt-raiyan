@@ -8,7 +8,7 @@ def search_patient():
 
     data = request.get_json()
     
-    # Vérification de sécurité simple
+ 
     if not data or 'id' not in data:
         return jsonify({"erreur": "Veuillez fournir un champ 'id' dans le JSON"}), 400
 

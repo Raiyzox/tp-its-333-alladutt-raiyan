@@ -1,14 +1,10 @@
 import json
 import os
 
-# Nom du fichier JSON
 FICHIER_BDD = 'patient.json'
 
 def recuperer_patient_par_id(id_recherche):
-    """
-    Cherche un patient par son ID dans le fichier JSON.
-    Retourne les données au format JSON (string) ou None si pas trouvé.
-    """
+
     
     # Vérifier si le fichier existe
     if not os.path.exists(FICHIER_BDD):

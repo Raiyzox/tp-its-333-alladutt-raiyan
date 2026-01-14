@@ -1,0 +1,80 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API Projet Raiyan",
+    "description": "Documentation de l'API de gestion des étudiants",
+    "version": "1.0"
+  },
+  "basePath": "/",
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "x-access-token"
+    }
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Se connecter (Obtenir le token)",
+        "description": "Utilisez user: 'raiyan' / pass: 'boss'",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string", "example": "raiyan" },
+                "password": { "type": "string", "example": "boss" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Succès - Token généré" },
+          "401": { "description": "Échec de connexion" }
+        }
+      }
+    },
+    "/etudiants": {
+      "get": {
+        "summary": "Voir la liste des étudiants (Public)",
+        "produces": ["application/json"],
+        "responses": {
+          "200": { "description": "Liste récupérée avec succès" }
+        }
+      }
+    },
+    "/new": {
+      "post": {
+        "summary": "Ajouter un étudiant (Admin seulement)",
+        "security": [ { "ApiKeyAuth": [] } ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nom": { "type": "string", "example": "Nouvel Élève" },
+                "adresse": { "type": "string", "example": "Paris" },
+                "pin": { "type": "string", "example": "75000" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Étudiant ajouté" },
+          "401": { "description": "Token manquant ou invalide" }
+        }
+      }
+    }
+  }
+}

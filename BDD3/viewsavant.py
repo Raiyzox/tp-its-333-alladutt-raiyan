@@ -1,51 +1,83 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
-# 1. Imports pour le JWT
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 app = Flask(__name__)
 
-# 2. Configuration du JWT
-app.config["JWT_SECRET_KEY"] = "super-secret-key-change-me"  # Clé de cryptage
-jwt = JWTManager(app)
+@app.route('/')
+def home():
+    return render_template('new.html')
 
-# ... (Tes routes home, new, list, edit restent ici, inchangées) ...
-
-# --- 3. NOUVELLE ROUTE : Authentification (Login) ---
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # Affichage du formulaire de connexion
-    if request.method == 'GET':
-        return render_template('login.html')
-
-    # Traitement de la connexion
+@app.route('/new', methods=['POST'])
+def add_student():
+    # ... (Garde ton code existant ici pour l'ajout) ...
+    # Je te remets le code court pour rappel :
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        try:
+            with sqlite3.connect("database.db") as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO etudiants (nom,addr,pin) VALUES (?,?,?)", 
+                           (request.form['nom'], request.form['addr'], request.form['pin']))
+                con.commit()
+        except:
+            con.rollback()
+    return redirect(url_for('list_students')) # Une fois ajouté, on va direct à la liste
+
+# --- NOUVELLE PARTIE POUR AFFICHER (READ) ---
+@app.route('/list')
+def list_students():
+    con = sqlite3.connect("database.db")
+    con.row_factory = sqlite3.Row # Important pour utiliser les noms des colonnes
+    cur = con.cursor()
+    
+    # On récupère aussi le 'rowid' pour pouvoir identifier chaque étudiant
+    cur.execute("SELECT rowid, * FROM etudiants")
+    rows = cur.fetchall()
+    con.close()
+    return render_template("list.html", rows=rows)
+
+# --- NOUVELLE PARTIE POUR MODIFIER (UPDATE) ---
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit_student(id):
+    con = sqlite3.connect("database.db")
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+
+    if request.method == 'POST':
+        # Si on a cliqué sur "Sauvegarder", on fait la mise à jour SQL
+        nom = request.form['nom']
+        addr = request.form['addr']
+        pin = request.form['pin']
         
+        # Commande SQL UPDATE (Slide 9 implique modification)
+        cur.execute("UPDATE etudiants SET nom=?, addr=?, pin=? WHERE rowid=?", (nom, addr, pin, id))
+        con.commit()
+        con.close()
+        return redirect(url_for('list_students')) # Retour à la liste
+    
+    else:
+        # Si on arrive juste sur la page, on récupère les infos actuelles de l'étudiant
+        cur.execute("SELECT rowid, * FROM etudiants WHERE rowid=?", (id,))
+        row = cur.fetchone()
+        con.close()
+        return render_template("edit.html", row=row)
+# --- NOUVELLE PARTIE POUR SUPPRIMER (DELETE) ---
+@app.route('/delete/<int:id>')
+def delete_student(id):
+    try:
         con = sqlite3.connect("database.db")
         cur = con.cursor()
         
-        # On vérifie si l'admin existe dans la BDD
-        cur.execute("SELECT * FROM admins WHERE username=? AND password=?", (username, password))
-        admin = cur.fetchone()
-        con.close()
+        # Commande SQL pour supprimer la ligne correspondant à l'ID (rowid)
+        cur.execute("DELETE FROM etudiants WHERE rowid = ?", (id,))
         
-        if admin:
-            # Si c'est bon, on crée le jeton (Token)
-            access_token = create_access_token(identity=username)
-            # On l'affiche en JSON (C'est le standard pour les API)
-            return jsonify(access_token=access_token), 200
-        else:
-            return "Mauvais login ou mot de passe", 401
-
-# Exemple de route protégée (Seul l'admin avec un token peut supprimer)
-@app.route('/protected-delete/<int:id>', methods=['DELETE'])
-@jwt_required() # <--- Cette ligne protège la route !
-def protected_delete(id):
-    # Ici, le code de suppression ne s'exécutera que si le token est valide
-    current_user = get_jwt_identity()
-    return jsonify(msg=f"Utilisateur supprimé par l'admin {current_user}"), 200
-
+        con.commit()
+        msg = "Supprimé avec succès"
+    except:
+        con.rollback()
+        msg = "Erreur lors de la suppression"
+    finally:
+        con.close()
+        # On retourne sur la page de la liste pour voir le résultat
+        return redirect(url_for('list_students'))
 if __name__ == '__main__':
     app.run(debug=True)
